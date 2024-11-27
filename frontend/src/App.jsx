@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Component } from "react";
+import { gql } from "@apollo/client";
+import { ApolloConsumer } from "@apollo/client";
+import {GET_CATEGORIES} from './queries';
 
-function App() {
-  const [count, setCount] = useState(0)
+const GET_CATEGORIES = gql`
+  query GetCategories {
+    categories {
+      name
+    }
+  }
+`;
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+class App extends Component {
+  state = {
+    categories: [],
+    loading: false,
+    error: null,
+  };
+
+  handleGetCategories = (req, res, next) => {
+    this.setState({ loading: true
+      });
+
+    client
+    .query({
+      query: GET_CATEGORIES,
+      })
+      .then(result => {
+        this.setState
+        ({ categories: result.data.categories, loading: false
+          });
+          })
+          .catch(error => {
+            this.setState
+            ({ error, loading: false
+              });
+            });
+            };
+
+  render() {
+    const { categories,loading, error } = this.state;
+    return (
+      <ApolloConsumer>
+        {(client) => (
+          <div className="app-container">
+            <h1>Categories</h1>
+            <button onClick={this.handleGetCategories}>Get Categories</button>
+            {loading ? (
+              <p>Loading...</p>
+              ) : (
+                <ul>
+                  {categories.map(category => (
+                    <li key={category.id}>{category.name}</li>
+                  ))}
+
+                </ul>
+                )}
+          </div>
+        )}
+      </ApolloConsumer>
+    );
+  }
 }
-
-export default App
+export default App;
