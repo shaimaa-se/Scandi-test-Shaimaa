@@ -11,6 +11,21 @@ use RuntimeException;
 use Throwable;
 
 class GraphQL {
+    private static  function getDatabaseConnection()
+    {
+        $servername = "localhost";
+        $username = "scandiAdmin";
+        $password = "1234";
+        $dbname = "scandi4ecommerce";
+
+        $conn = new \mysqli($servername, $username, $password, $dbname);
+
+        if ($conn->connect_error) {
+            throw new RuntimeException("Connection failed: " . $conn->connect_error);
+        }
+
+        return $conn;
+    }
     static public function handle() {
         try {
             $queryType = new ObjectType([
