@@ -79,3 +79,9 @@ export const GET_ProductById = gql`
     }
   }
 `;
+// GraphQL Mutation for Placing the Order
+export const PLACE_ORDER_MUTATION = gql`
+  mutation PlaceOrder($orderData: OrderInput!) {
+    placeOrder(orderData: $orderData)
+  }
+`;
